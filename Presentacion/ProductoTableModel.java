@@ -31,7 +31,35 @@ public class ProductoTableModel extends AbstractTableModel{
     
     public void add(Producto produc) {
         data.add(produc); //agrega un producto a la tabla
-        int idx = data.size() - 1;
-        fireTableRowsInserted(idx, idx); //Notifica que 
+        int fila = data.size() - 1;
+        fireTableRowsInserted(fila, fila); //Notifica a todos los oyentes que se han insertado filas en la ultima posicion
     }
+    
+    public void update(int fila, Producto produc) {
+        data.set(fila, produc);
+        fireTableRowsUpdated(fila, fila); //Notifica a todos los oyentes que se han actualizado en una posicion especifica
+    }
+    
+    public void remove(int fila) {
+        data.remove(fila);
+        fireTableRowsDeleted(fila, fila); //Notifica a todos los oyentes que se han eliminado filas en una posicion especifica
+    }
+    
+    //son metodos de un super tipo (propios de Table Model)
+    @Override public int getRowCount() { return data.size(); }
+    @Override public int getColumnCount() { return cols.length; }
+    @Override public String getColumnName(int column) { return cols[column]; }
+    
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        Producto l = data.get(rowIndex);
+        return switch (columnIndex) {
+            case 0 -> l.getId();
+            case 1 -> l.getTitulo();
+            case 2 -> l.getAutor();
+            case 3 -> l.getAnio();
+            default -> "";
+        };
+    }
+
 }
