@@ -32,6 +32,6 @@ public class ProductoTableModel extends AbstractTableModel{
     public void add(Producto produc) {
         data.add(produc); //agrega un producto a la tabla
         int idx = data.size() - 1;
-        fireTableRowsInserted(idx, idx);
+        fireTableRowsInserted(idx, idx); //Notifica que 
     }
 }
