@@ -4,6 +4,8 @@
  */
 package Presentacion;
 import javax.swing.*;
+import javax.swing.table.TableRowSorter;
+import AccesoADatos.ColeccionProducto;
 
 /**
  *
@@ -11,6 +13,17 @@ import javax.swing.*;
  */
 public class ProductoFrame extends JFrame{
     
+    private final ColeccionProducto backend = new ColeccionProducto(); //Indica la fuente de datos
+    private final ProductoTableModel tableModel = new ProductoTableModel(); //Intermediario entre la tabla y los datos
+    private JTable table; //Crea la tabla
+    private TableRowSorter<ProductoTableModel> sorter; //Ordena por columna, ejemplo nombre alfabeticamente
     
+    //Crea los espacios para escribir
+    private final JTextField txtBuscar = new JTextField();
+    private final JTextField txtCod = new JTextField();
+    private final JTextField txtNombre = new JTextField();
+    private final JTextField txtPrecio = new JTextField();
+    private final JTextField txtImportado = new JTextField();
+    private final JTextField txtTipo = new JTextField();
     
 }
