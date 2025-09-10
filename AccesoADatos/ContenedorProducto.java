@@ -5,51 +5,53 @@
 package AccesoADatos;
 
 import java.util.ArrayList;
+import Modelo.Producto;
 
 /**
  *
  * @author estudiante
  */
-public class ContProducto {
-    ArrayList<Estudiante> listaEsts = new ArrayList<>();
-    public boolean insertar(Estudiante est){
-        if (buscar(est.getId()) != null){
-            listaEsts.add(est);
+public class ColeccionProducto {
+    ArrayList<Producto> listaProducs = new ArrayList<>();
+    
+    public boolean insertar(Producto produc){
+        if (buscar(produc.getCodigo()) != null){
+            listaProducs.add(produc);
             return true;
         }
         return false;
     }
-    public boolean modificar(Estudiante estMod){
-        for (int i = 0; i < listaEsts.size(); i++){
-            if(listaEsts.get(i).getId().equals(estMod.getId())){
-                listaEsts.set(i, estMod);
+    public boolean modificar(Producto producMod){
+        for (int i = 0; i < listaProducs.size(); i++){
+            if(listaProducs.get(i).getCodigo() == producMod.getCodigo()){
+                listaProducs.set(i, producMod);
                 return true;
             }
         }
         return false;
     }
-    public boolean eliminar(String id){
-        if (listaEsts.size() == 0){
+    public boolean eliminar(int id){
+        if (listaProducs.size() == 0){
             return false;
         }
-        for (int i = 0; i < listaEsts.size(); i++) {
-            if (listaEsts.get(i).getId() == id){
-                listaEsts.remove(i);
+        for (int i = 0; i < listaProducs.size(); i++) {
+            if (listaProducs.get(i).getCodigo() == id){
+                listaProducs.remove(i);
                 return true;
             }
         }
         return false;
         
     }
-    public Estudiante buscar(String id){
-        for (Estudiante est : listaEsts) {
-            if (est.getId().equals(id)) {
-                return est;
+    public Producto buscar(int id){
+        for (Producto produc : listaProducs) {
+            if (produc.getCodigo() == id) {
+                return produc;
             }
         }
         return null;
     }
     public ArrayList listado(){
-        return listaEsts;
+        return listaProducs;
     }
 }
