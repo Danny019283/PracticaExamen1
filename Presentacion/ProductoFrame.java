@@ -19,12 +19,24 @@ public class ProductoFrame extends JFrame{
     private TableRowSorter<ProductoTableModel> sorter; //Ordena por columna, ejemplo nombre alfabeticamente
     
     //Crea los espacios para escribir
-    private final JTextField txtBuscar = new JTextField();
+    private final JTextField txtBuscarNombre = new JTextField();
+    private final JComboBox<String> comboBuscarTipo = new JComboBox<String>();
     private final JTextField txtCod = new JTextField();
     private final JTextField txtNombre = new JTextField();
     private final JTextField txtPrecio = new JTextField();
-    private final JTextField txtImportado = new JTextField();
-    private final JTextField txtTipo = new JTextField();
+    private final JComboBox<String> comboTipo = new JComboBox<String>();
+
+    //Crea el constructor JFrame (configura la ventana)
+    ProductoFrame(){
+        setTitle("Productos");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 800);
+        setLocationRelativeTo(null); //centra la ventana
+    }
+
+    public void buildUI(){
+        JPanel content =
+    }
 
 
     
