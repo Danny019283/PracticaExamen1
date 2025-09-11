@@ -25,5 +25,14 @@ public class ProductoFrame extends JFrame{
     private final JTextField txtPrecio = new JTextField();
     private final JTextField txtImportado = new JTextField();
     private final JTextField txtTipo = new JTextField();
+
+
     
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception ignored) {}
+            new ProductoFrame().setVisible(true);
+        });
+    }
 }
