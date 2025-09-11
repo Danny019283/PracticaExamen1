@@ -51,6 +51,16 @@ public class ColeccionProducto {
         }
         return null;
     }
+    
+    public Producto buscarNombre(String nombre){
+        for (Producto produc : listaProducs) {
+            if (produc.getNombre() == nombre) {
+                return produc;
+            }
+        }
+        return null;
+    }
+    
     public ArrayList listado(){
         return listaProducs;
     }

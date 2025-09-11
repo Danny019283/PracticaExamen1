@@ -35,7 +35,7 @@ public class ProductoFrame extends JFrame{
     }
 
     public void buildUI(){
-        JPanel content =
+        
     }
 
 
