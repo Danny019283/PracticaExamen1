@@ -5,7 +5,6 @@
 package Presentacion;
 
 
-import Modelo.Producto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -52,14 +51,27 @@ public class ProductoTableModel extends AbstractTableModel{
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Producto l = data.get(rowIndex);
+        Producto p = data.get(rowIndex);
         return switch (columnIndex) {
-            case 0 -> l.getId();
-            case 1 -> l.getTitulo();
-            case 2 -> l.getAutor();
-            case 3 -> l.getAnio();
+            case 0 -> p.getCodigo();
+            case 1 -> p.getNombre();
+            case 2 -> p.isImportado();
+            case 3 -> p.getPrecio();
+            case 4 -> p.getTipo().getDescripcion();
+            case 5 -> p.getTipo().getPorcentajeImpuesto();
+            case 6 -> p.PrecioFinal();
             default -> "";
         };
+    }
+    //Devuelve la superclase más específica para todos los valores de celda de la columna. 
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return columnIndex == 3 ? Integer.class : String.class;
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return false; // editamos desde el formulario
     }
 
 }
