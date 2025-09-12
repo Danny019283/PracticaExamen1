@@ -14,7 +14,7 @@ import Modelo.Producto;
  *
  * @author Danny
  */
-public class ProductoTableModel extends AbstractTableModel{
+public class tablaProducto extends AbstractTableModel{
     private final String[] cols = {"Codigo", "Nombre", "Importado", "Precio", "Tipo", "Porcentaje", "Precio Final"}; //crea las colummnas
     private final List<Producto> data = new ArrayList<>(); //data es la Lista donde se van almacenar los productos
     

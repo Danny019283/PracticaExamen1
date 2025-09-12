@@ -54,7 +54,16 @@ public class ColeccionProducto {
     
     public Producto buscarNombre(String nombre){
         for (Producto produc : listaProducs) {
-            if (produc.getNombre() == nombre) {
+            if (produc.getNombre().equals(nombre)) {
+                return produc;
+            }
+        }
+        return null;
+    }
+    
+    public Producto buscarTipo(String tipo){
+        for (Producto produc : listaProducs) {
+            if (produc.getTipo().getDescripcion().equals(tipo)) {
                 return produc;
             }
         }
