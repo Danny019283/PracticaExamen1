@@ -16,10 +16,10 @@ public class ColeccionProducto {
     
     public boolean insertar(Producto produc){
         if (buscar(produc.getCodigo()) != null){
-            listaProducs.add(produc);
-            return true;
+            return false;
         }
-        return false;
+        listaProducs.add(produc);
+        return true;
     }
     public boolean modificar(Producto producMod){
         for (int i = 0; i < listaProducs.size(); i++){
@@ -31,7 +31,7 @@ public class ColeccionProducto {
         return false;
     }
     public boolean eliminar(int id){
-        if (listaProducs.size() == 0){
+        if (listaProducs.isEmpty()){
             return false;
         }
         for (int i = 0; i < listaProducs.size(); i++) {
@@ -52,25 +52,7 @@ public class ColeccionProducto {
         return null;
     }
     
-    public Producto buscarNombre(String nombre){
-        for (Producto produc : listaProducs) {
-            if (produc.getNombre().equals(nombre)) {
-                return produc;
-            }
-        }
-        return null;
-    }
-    
-    public Producto buscarTipo(String tipo){
-        for (Producto produc : listaProducs) {
-            if (produc.getTipo().getDescripcion().equals(tipo)) {
-                return produc;
-            }
-        }
-        return null;
-    }
-    
-    public ArrayList listado(){
-        return listaProducs;
+    public ArrayList<Producto> listar(){
+        return new ArrayList<>(listaProducs);
     }
 }

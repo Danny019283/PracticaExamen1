@@ -55,7 +55,7 @@ public class tablaProducto extends AbstractTableModel{
         return switch (columnIndex) {
             case 0 -> p.getCodigo();
             case 1 -> p.getNombre();
-            case 2 -> p.isImportado();
+            case 2 -> {if (p.isImportado()) {yield "si";} else{yield "no";}}
             case 3 -> p.getPrecio();
             case 4 -> p.getTipo().getDescripcion();
             case 5 -> p.getTipo().getPorcentajeImpuesto();

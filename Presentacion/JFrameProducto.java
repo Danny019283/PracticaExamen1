@@ -6,9 +6,18 @@ package Presentacion;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableRowSorter;
-import AccesoADatos.ColeccionProducto;
-
+import javax.swing.table.*;
 import java.awt.*;
+import java.awt.event.*;   // <-- esto incluye ActionListener, ActionEvent, etc.
+
+
+import AccesoADatos.ColeccionProducto;
+import AccesoADatos.ColeccionTipo;
+import Modelo.Producto;
+import Modelo.Tipo;
+
+
+
 
 /**
  *
@@ -17,8 +26,9 @@ import java.awt.*;
 public class JFrameProducto extends JFrame{
     
     private final ColeccionProducto backend = new ColeccionProducto(); //Indica la fuente de datos
+    private final ColeccionTipo backendTipo = new ColeccionTipo();
     private final tablaProducto tblProducto = new tablaProducto(); //Intermediario entre la tabla y los datos
-    private JTable table = new JTable();
+    private JTable tabla = new JTable();
     private TableRowSorter<tablaProducto> sorter;
 
     //Crea los espacios para escribir
@@ -28,7 +38,7 @@ public class JFrameProducto extends JFrame{
     private final JTextField txtNombre = new JTextField();
     private final JTextField txtPrecio = new JTextField();
     private final JCheckBox chkImportado = new JCheckBox();
-    private final JComboBox<String> cmbTipo = new JComboBox<String>();
+    private final JComboBox<String> cmbTipo = new JComboBox<>();
     
     //Crea los botones
     private final JButton btnBuscarNombre = new JButton("Buscar");
@@ -42,75 +52,129 @@ public class JFrameProducto extends JFrame{
         setSize(800, 800);
         setLocationRelativeTo(null); //centra la ventana
         buildUI();
+        seedAndLoad();
         setVisible(true);
     }
 
-    public void buildUI(){
+    public void buildUI() {
         //este es el panel donde va los demas paneles como una hoja
-        JPanel content = new JPanel(new BorderLayout(12, 12));
-        content.setBackground(Color.LIGHT_GRAY);
-        content.setBorder(new EmptyBorder(12, 20, 12, 20)); //crea espacios entre elementos
-        setContentPane(content);
+        JPanel pnlContenido = new JPanel(new BorderLayout(12, 12));
+        pnlContenido.setBackground(Color.LIGHT_GRAY);
+        pnlContenido.setBorder(new EmptyBorder(12, 20, 12, 20)); //crea espacios entre elementos
+        setContentPane(pnlContenido);
 
         //panel superior
-        JPanel top = new JPanel();
-        top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS)); //Va dividiendo el panel en el x
-        top.setBorder(new EmptyBorder(12, 12, 12, 12));
-        content.add(top, BorderLayout.NORTH);
+        JPanel pnlArriba = new JPanel();
+        pnlArriba.setLayout(new BoxLayout(pnlArriba, BoxLayout.X_AXIS)); //Va dividiendo el panel en el x
+        pnlArriba.setBorder(new EmptyBorder(12, 12, 12, 12));
+        pnlContenido.add(pnlArriba, BorderLayout.NORTH);
 
         // TopWest: búsqueda por nombre
-        JPanel topLeft = new JPanel(new BorderLayout(12, 12));
-        topLeft.add(new JLabel("Nombre:"),  BorderLayout.WEST);
-        topLeft.add(txtBuscarNombre, BorderLayout.CENTER);
-        topLeft.add(btnBuscarNombre,  BorderLayout.EAST);
-        top.add(topLeft);
+        JPanel pnlArribaIzq = new JPanel(new BorderLayout(12, 12));
+        pnlArribaIzq.add(new JLabel("Nombre:"), BorderLayout.WEST);
+        pnlArribaIzq.add(txtBuscarNombre, BorderLayout.CENTER);
+        pnlArribaIzq.add(btnBuscarNombre, BorderLayout.EAST);
+        pnlArriba.add(pnlArribaIzq);
 
-        top.add(Box.createRigidArea(new Dimension(20, 10))); //agrega una separacion entre panel y panel
+        pnlArriba.add(Box.createRigidArea(new Dimension(20, 10))); //agrega una separacion entre panel y panel
 
         //TopEast busqueda por tipo
-        JPanel topRight = new JPanel(new BorderLayout(12, 12));
-        topRight.add(new JLabel("Tipo:"),   BorderLayout.WEST);
-        topRight.add(comboBuscarTipo,  BorderLayout.CENTER);
-        topRight.add(btnBuscarTipo,  BorderLayout.EAST);
-        top.add(topRight);
+        JPanel pnlArribaDer = new JPanel(new BorderLayout(12, 12));
+        pnlArribaDer.add(new JLabel("Tipo:"), BorderLayout.WEST);
+        pnlArribaDer.add(comboBuscarTipo, BorderLayout.CENTER);
+        pnlArribaDer.add(btnBuscarTipo, BorderLayout.EAST);
+        pnlArriba.add(pnlArribaDer);
 
         // Centro: tabla
-        table.setRowHeight(24);
-        table = new JTable(tblProducto);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabla.setRowHeight(24);
+        tabla = new JTable(tblProducto);
+        tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         sorter = new TableRowSorter<>(tblProducto);
-        table.setRowSorter(sorter);
-        content.add(new JScrollPane(table), BorderLayout.CENTER);
+        tabla.setRowSorter(sorter);
+        pnlContenido.add(new JScrollPane(tabla), BorderLayout.CENTER);
 
-        JPanel bottom = new JPanel(new GridLayout(0, 2));
-        bottom.setBorder(new EmptyBorder(12, 12, 12, 12));
-        content.add(bottom, BorderLayout.SOUTH);
+        JPanel pnlAbajo = new JPanel(new GridLayout(0, 2));
+        pnlAbajo.setBorder(new EmptyBorder(12, 12, 12, 12));
+        pnlContenido.add(pnlAbajo, BorderLayout.SOUTH);
 
         // Abajp: formulario + boton
-        JPanel bottomLeft = new JPanel();
-        bottomLeft.setBackground(Color.LIGHT_GRAY);
-        bottomLeft.setLayout(new GridLayout(0, 2, 12, 0));
-        bottomLeft.add(field("Codigo", txtCod));
-        bottomLeft.add(Box.createVerticalStrut(6));
-        bottomLeft.add(field("Nombre", txtNombre));
-        bottomLeft.add(Box.createVerticalStrut(6));
-        bottomLeft.add(field("Precio", txtPrecio));
-        bottomLeft.add(Box.createVerticalStrut(6));
+        JPanel pnlAbajoIzq = new JPanel();
+        pnlAbajoIzq.setBackground(Color.LIGHT_GRAY);
+        pnlAbajoIzq.setLayout(new GridLayout(0, 2, 12, 0));
+        pnlAbajoIzq.add(field("Codigo", txtCod));
+        pnlAbajoIzq.add(Box.createVerticalStrut(6));
+        pnlAbajoIzq.add(field("Nombre", txtNombre));
+        pnlAbajoIzq.add(Box.createVerticalStrut(6));
+        pnlAbajoIzq.add(field("Precio", txtPrecio));
+        pnlAbajoIzq.add(Box.createVerticalStrut(6));
         chkImportado.setBackground(Color.LIGHT_GRAY);
-        bottomLeft.add(field("Importado", chkImportado));
-        bottomLeft.add(Box.createVerticalStrut(6));
-        bottomLeft.add(field("Tipo", cmbTipo));
+        pnlAbajoIzq.add(field("Importado", chkImportado));
+        pnlAbajoIzq.add(Box.createVerticalStrut(6));
+        pnlAbajoIzq.add(field("Tipo", cmbTipo));
 
-        JPanel buttonA = new JPanel();
-        buttonA.setBackground(Color.LIGHT_GRAY);
-        buttonA.setBorder(new EmptyBorder(11, 12, 8, 12));
-        buttonA.add(btnAgregar);
+        JPanel pnlBotonA = new JPanel();
+        pnlBotonA.setBackground(Color.LIGHT_GRAY);
+        pnlBotonA.setBorder(new EmptyBorder(11, 12, 8, 12));
+        pnlBotonA.add(btnAgregar);
+
+        pnlAbajoIzq.add(pnlBotonA);
+        pnlAbajo.add(pnlAbajoIzq);
 
 
-        bottomLeft.add(buttonA);
-        bottom.add(bottomLeft);
+        // Listeners
+        btnBuscarNombre.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nombre = txtBuscarNombre.getText().trim();
+                if (nombre.isEmpty()) {
+                    sorter.setRowFilter(null); // mostrar todo
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + nombre));
+                }
+            }
+        });
+
+        btnBuscarTipo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String tipo = (String) comboBuscarTipo.getSelectedItem();
+                if (tipo.isEmpty()) {
+                    sorter.setRowFilter(null); // mostrar todo
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + tipo));
+                }
+            }
+        });
+
+        btnAgregar.addActionListener(this::onAgregar);
+
     }
 
+    private void seedAndLoad() {
+        // Sembrar si está vacío
+
+        if (backend.listar().isEmpty()) {
+
+            Tipo t1 = new Tipo(1, "Canasta basica", 5);
+            backendTipo.AgregarTipo(t1);
+
+            Tipo t2 = new Tipo(2, "Electrodomésticos", 15);
+            backendTipo.AgregarTipo(t2);
+
+            Tipo t3 = new Tipo(3, "Bebidas", 10);
+            backendTipo.AgregarTipo(t3);
+
+            backend.insertar(new Producto(123, "Leche", 1000, false, t1));
+            backend.insertar(new Producto(124, "Arroz", 800, false, t1));
+            backend.insertar(new Producto(200, "Refrigeradora", 350000, true, t2));
+            backend.insertar(new Producto(201, "Coca Cola 2L", 1500, false, t3));
+
+        }
+        tblProducto.setData(backend.listar());
+        setCmb();
+    }
+
+    //crea filas de JPanel
     private JPanel field(String label, JComponent input) {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(Color.LIGHT_GRAY);
@@ -121,6 +185,67 @@ public class JFrameProducto extends JFrame{
         p.add(input, BorderLayout.CENTER);
         return p;
     }
+
+    private void onAgregar(ActionEvent e) {
+        try {
+            Producto nuevo = readForm();
+            if (!backend.insertar(nuevo)) {
+                throw new IllegalArgumentException("El codigo ya existe: " + nuevo.getCodigo());
+            }
+            tblProducto.add(nuevo);
+            clearForm();
+            JOptionPane.showMessageDialog(this, "Producto agregado.");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Validación", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void setCmb() {
+        for (Tipo tipo : backendTipo.getListaTipos()) {
+            cmbTipo.addItem(tipo.getDescripcion());
+            comboBuscarTipo.addItem(tipo.getDescripcion());
+        }
+    }
+
+
+    //crea y valida el Producto a agregar
+    private Producto readForm() {
+        int cod;
+        try {
+             cod = Integer.parseInt(txtCod.getText());
+        }
+        catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("El codigo solo puede llevar numeros enteros");
+        }
+        String nombre = txtNombre.getText().trim();
+        String precio = txtPrecio.getText().trim();
+        boolean importado = chkImportado.isSelected();
+        Tipo tipo = backendTipo.buscarTipo((String) cmbTipo.getSelectedItem());
+
+        if (cod == 0 ||  nombre.isEmpty() || precio.isEmpty()) {
+            throw new IllegalArgumentException("Complete todos los campos.");
+        }
+        float precio1;
+        try { precio1 = Float.parseFloat(precio); }
+        catch (NumberFormatException ex) { throw new IllegalArgumentException("El año debe ser entero."); }
+
+        if (precio1 < 0) throw new IllegalArgumentException("El año no puede ser negativo.");
+
+        return new Producto(cod, nombre, precio1, importado, tipo);
+    }
+
+private void clearForm() {
+    txtCod.setText("");
+    txtNombre.setText("");
+    txtPrecio.setText("");
+    chkImportado.setSelected(false);
+    cmbTipo.setSelectedIndex(0);
+
+    tabla.clearSelection();
+    txtCod.requestFocus();
+}
+
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
